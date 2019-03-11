@@ -1,0 +1,13 @@
+import build.ArtifactInfo
+
+apply from: new File(rootProject.baseBuildScriptPath, 'base_publish.gradle')
+
+publish {
+    def artifactProjectID = ArtifactInfo.Lifecycle.artifactProjectID
+    def publishVersionID = ArtifactInfo.Lifecycle.publishVersionID
+    def description = ArtifactInfo.Lifecycle.description
+
+    artifactId = artifactProjectID
+    publishVersion = publishVersionID
+    desc = description
+}

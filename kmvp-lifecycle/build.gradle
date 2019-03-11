@@ -1,0 +1,36 @@
+import build.Libs
+import build.TestingLibs
+
+apply from: rootProject.publishLifecycleBuildScriptFile
+apply from: rootProject.libModuleBuildScriptFile
+
+
+android.testOptions {
+    unitTests {
+        // Fixes android.content.res.Resources$NotFoundException : integer/google_play_services_version
+        includeAndroidResources true
+        all {
+            jvmArgs '-noverify'
+        }
+    }
+}
+
+
+dependencies {
+    implementation Libs.kotlin
+
+    api project(":kmvp")
+
+    implementation Libs.AndroidX.Arch.core
+    implementation Libs.AndroidX.Arch.Lifecycle.common
+    implementation Libs.AndroidX.Arch.Lifecycle.commonJava8
+    implementation Libs.AndroidX.Arch.Lifecycle.runtime
+
+    implementation Libs.AndroidX.core
+    implementation Libs.AndroidX.appcompat
+
+    testImplementation Libs.kotlin
+    testImplementation TestingLibs.junit
+    testImplementation TestingLibs.truth
+    testImplementation TestingLibs.robolectric
+}
