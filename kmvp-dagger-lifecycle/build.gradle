@@ -1,0 +1,15 @@
+import config.Libs
+
+apply from: rootProject.scriptFiles.publishDaggerLifecycleBuildScriptFile
+apply from: rootProject.scriptFiles.libModuleBuildScriptFile
+apply from: rootProject.scriptFiles.daggerBuildScriptFile
+apply from: rootProject.scriptFiles.archComponentsBuildScriptFile
+
+dependencies {
+    api project(":kmvp")
+    api project(":kmvp-dagger")
+    api project(":kmvp-lifecycle")
+
+    implementation Libs.AndroidX.core
+    implementation Libs.AndroidX.appcompat
+}

@@ -1,0 +1,9 @@
+import config.Libs
+
+apply from: rootProject.scriptFiles.publishCoreBuildScriptFile
+apply from: rootProject.scriptFiles.libModuleBuildScriptFile
+
+dependencies {
+    implementation Libs.AndroidX.core
+    implementation Libs.AndroidX.appcompat
+}

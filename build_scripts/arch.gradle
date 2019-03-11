@@ -1,0 +1,15 @@
+import config.Libs
+
+dependencies {
+    implementation Libs.AndroidX.Arch.core
+
+    implementation Libs.AndroidX.Arch.Lifecycle.common
+    implementation Libs.AndroidX.Arch.Lifecycle.extensions
+    kapt Libs.AndroidX.Arch.Lifecycle.Kapt.compiler
+
+    implementation Libs.AndroidX.Arch.Lifecycle.livedataCore
+    implementation Libs.AndroidX.Arch.Lifecycle.livedata
+
+    implementation Libs.AndroidX.Arch.Lifecycle.viewmodel
+    implementation Libs.AndroidX.Arch.Lifecycle.reactivestreams
+}

@@ -1,0 +1,13 @@
+import config.ArtifactInfo
+
+apply from: rootProject.scriptFiles.basePublishScriptFile
+
+publish {
+    def artifactProjectID = ArtifactInfo.Core.artifactProjectID
+    def publishVersionID = ArtifactInfo.Core.publishVersionID
+    def description = ArtifactInfo.Core.description
+
+    artifactId = artifactProjectID
+    publishVersion = publishVersionID
+    desc = description
+}

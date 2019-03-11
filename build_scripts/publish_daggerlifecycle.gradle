@@ -1,0 +1,13 @@
+import config.ArtifactInfo
+
+apply from: rootProject.scriptFiles.basePublishScriptFile
+
+publish {
+    def artifactProjectID = ArtifactInfo.DaggerLifecycle.artifactProjectID
+    def publishVersionID = ArtifactInfo.DaggerLifecycle.publishVersionID
+    def description = ArtifactInfo.DaggerLifecycle.description
+
+    artifactId = artifactProjectID
+    publishVersion = publishVersionID
+    desc = description
+}
