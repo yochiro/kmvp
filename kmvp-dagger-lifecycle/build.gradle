@@ -1,9 +1,11 @@
 import config.Libs
 
-apply from: rootProject.scriptFiles.publishDaggerLifecycleBuildScriptFile
-apply from: rootProject.scriptFiles.libModuleBuildScriptFile
-apply from: rootProject.scriptFiles.daggerBuildScriptFile
-apply from: rootProject.scriptFiles.archComponentsBuildScriptFile
+plugins {
+    id("LibraryModule")
+    id("DaggerModule")
+    id("ArchModule")
+}
+apply from: rootProject.file("build_scripts/publish_daggerlifecycle.gradle")
 
 dependencies {
     api project(":kmvp")

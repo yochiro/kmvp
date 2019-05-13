@@ -1,7 +1,9 @@
 import config.Libs
 
-apply from: rootProject.scriptFiles.publishCoreBuildScriptFile
-apply from: rootProject.scriptFiles.libModuleBuildScriptFile
+plugins {
+    id("LibraryModule")
+}
+apply from: rootProject.file("build_scripts/publish_core.gradle")
 
 dependencies {
     implementation Libs.AndroidX.core

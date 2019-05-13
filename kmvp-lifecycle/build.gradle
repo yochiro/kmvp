@@ -1,8 +1,10 @@
 import config.Libs
 
-apply from: rootProject.scriptFiles.publishLifecycleBuildScriptFile
-apply from: rootProject.scriptFiles.libModuleBuildScriptFile
-apply from: rootProject.scriptFiles.archComponentsBuildScriptFile
+plugins {
+    id("LibraryModule")
+    id("ArchModule")
+}
+apply from: rootProject.file("build_scripts/publish_lifecycle.gradle")
 
 dependencies {
     api project(":kmvp")

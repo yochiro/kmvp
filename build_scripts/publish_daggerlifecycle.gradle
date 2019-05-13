@@ -1,6 +1,6 @@
 import config.ArtifactInfo
 
-apply from: rootProject.scriptFiles.basePublishScriptFile
+apply from: rootProject.file("build_scripts/base_publish.gradle")
 
 publish {
     def artifactProjectID = ArtifactInfo.DaggerLifecycle.artifactProjectID

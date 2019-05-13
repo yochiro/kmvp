@@ -3,17 +3,18 @@
 package config
 
 object Builds {
-    private const val androidGradlePlugin =
-        "com.android.tools.build:gradle:${BuildGradlePluginsVersions.gradlePluginVersion}"
+    private val androidGradlePlugin = AGP.lib
     private const val kotlinGradlePlugin =
         "org.jetbrains.kotlin:kotlin-gradle-plugin:${BuildGradlePluginsVersions.kotlinVersion}"
-    private const val novodaGradlePlugin =
-        "com.novoda:bintray-release:${BuildGradlePluginsVersions.novodaPluginVersion}"
+    private const val butterknifeGradlePlugin =
+        "com.jakewharton:butterknife-gradle-plugin:${LibVersions.butterKnifeVersion}"
+
+    const val googleServicesPlugin =
+        "com.google.gms:google-services:${BuildGradlePluginsVersions.googleServicesGradlePluginVersion}"
 
     val basePlugins = listOf(
         androidGradlePlugin,
-        kotlinGradlePlugin,
-        novodaGradlePlugin
+        kotlinGradlePlugin
     )
 }
 
@@ -32,6 +33,53 @@ object Libs {
         const val daggerAndroid = "com.google.dagger:dagger-android:${LibVersions.daggerVersion}"
         const val daggerAndroidX =
             "com.google.dagger:dagger-android-support:${LibVersions.daggerVersion}"
+    }
+
+    object Butterknife {
+
+        object Kapt {
+            const val compiler =
+                "com.jakewharton:butterknife-compiler:${LibVersions.butterKnifeVersion}"
+        }
+
+        const val core = "com.jakewharton:butterknife:${LibVersions.butterKnifeVersion}"
+    }
+
+    object OkHttp {
+        const val okhttp = "com.squareup.okhttp3:okhttp:${LibVersions.Network.okHttpVersion}"
+        const val okhttpUrlConnection =
+            "com.squareup.okhttp3:okhttp-urlconnection:${LibVersions.Network.okHttpVersion}"
+        const val okhttpLoggingInterceptor =
+            "com.squareup.okhttp3:logging-interceptor:${LibVersions.Network.okHttpVersion}"
+    }
+
+    object Retrofit {
+        const val moshi = "com.squareup.moshi:moshi:${LibVersions.Network.moshiVersion}"
+        const val moshiAdapters =
+            "com.squareup.moshi:moshi-adapters:${LibVersions.Network.moshiVersion}"
+        const val retrofit =
+            "com.squareup.retrofit2:retrofit:${LibVersions.Network.retrofitVersion}"
+        const val moshiConverter =
+            "com.squareup.retrofit2:converter-moshi:${LibVersions.Network.converterMoshiVersion}"
+        const val rxJava2Adapter =
+            "com.squareup.retrofit2:adapter-rxjava2:${LibVersions.Network.retrofitVersion}"
+    }
+
+    object RxJava2 {
+        const val rxJava2 = "io.reactivex.rxjava2:rxjava:${RxJavaVersions.rxJava2Version}"
+        const val rxAndroid = "io.reactivex.rxjava2:rxandroid:${RxJavaVersions.rxAndroidVersion}"
+        const val debug = "com.akaita.java:rxjava2-debug:${RxJavaVersions.rxJava2DebugVersion}"
+    }
+
+    object Glide {
+
+        object Kapt {
+            const val compiler = "com.github.bumptech.glide:compiler:${LibVersions.glideVersion}"
+        }
+
+        const val glide = "com.github.bumptech.glide:glide:${LibVersions.glideVersion}"
+        const val webpdecoder = "com.zlc.glide:webpdecoder:1.2.${LibVersions.glideVersion}"
+        const val annotations = "com.github.bumptech.glide:annotations:${LibVersions.glideVersion}"
     }
 
     object AndroidX {
@@ -66,16 +114,64 @@ object Libs {
                 const val reactivestreams =
                     "androidx.lifecycle:lifecycle-reactivestreams:${AndroidXVersions.ArchComponent.androidXArchLifecycleVersion}"
             }
+
+            object Room {
+
+                object Kapt {
+                    const val compiler =
+                        "androidx.room:room-compiler:${AndroidXVersions.ArchComponent.androidXArchRoomVersion}"
+                }
+
+                const val common =
+                    "androidx.room:room-common:${AndroidXVersions.ArchComponent.androidXArchRoomVersion}"
+                const val runtime =
+                    "androidx.room:room-runtime:${AndroidXVersions.ArchComponent.androidXArchRoomVersion}"
+                const val rxjava2 =
+                    "androidx.room:room-rxjava2:${AndroidXVersions.ArchComponent.androidXArchRoomVersion}"
+            }
+
+            object Paging {
+                const val common =
+                    "androidx.paging:paging-common:${AndroidXVersions.ArchComponent.androidXArchPagingVersion}"
+                const val runtime =
+                    "androidx.paging:paging-runtime:${AndroidXVersions.ArchComponent.androidXArchPagingVersion}"
+            }
         }
 
         const val core = "androidx.core:core:${AndroidXVersions.androidXCoreVersion}"
         const val coreKtx = "androidx.core:core-ktx:${AndroidXVersions.androidXCoreKtxVersion}"
+        const val fragmentKtx =
+            "androidx.fragment:fragment-ktx:${AndroidXVersions.androidXFragmentKtxVersion}"
+        const val material =
+            "com.google.android.material:material:${AndroidXVersions.androidXMaterialVersion}"
+        const val fragment =
+            "androidx.fragment:fragment:${AndroidXVersions.androidXFragmentVersion}"
         const val appcompat =
             "androidx.appcompat:appcompat:${AndroidXVersions.androidXAppCompatVersion}"
+        const val recyclerview =
+            "androidx.recyclerview:recyclerview:${AndroidXVersions.androidXRecyclerViewVersion}"
+        const val constraintlayout =
+            "androidx.constraintlayout:constraintlayout:${AndroidXVersions.androidXConstraintLayoutVersion}"
+        const val preference =
+            "androidx.preference:preference:${AndroidXVersions.androidXPreferenceVersion}"
+        const val gridlayout =
+            "androidx.gridlayout:gridlayout:${AndroidXVersions.androidXGridLayoutVersion}"
+        const val cardview =
+            "androidx.cardview:cardview:${AndroidXVersions.androidXCardViewVersion}"
+        const val browser = "androidx.browser:browser:${AndroidXVersions.androidXBrowserVersion}"
+        const val drawerlayout =
+            "androidx.drawerlayout:drawerlayout:${AndroidXVersions.androidXDrawerLayoutVersion}"
+        const val media = "androidx.media:media:${AndroidXVersions.androidXMediaVersion}"
+        const val annotation =
+            "androidx.annotation:annotation:${AndroidXVersions.androidXAnnotationVersion}"
+        const val multidex =
+            "androidx.multidex:multidex:${AndroidXVersions.androidXMultidexVersion}"
     }
 
     const val kotlin =
         "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${BuildGradlePluginsVersions.kotlinVersion}"
+    const val threetenabp =
+        "com.jakewharton.threetenabp:threetenabp:${LibVersions.threetenAbpVersion}"
 }
 
 object TestingLibs {
@@ -114,5 +210,4 @@ object TestingLibs {
     const val truth = "com.google.truth:truth:${TestingVersions.testGoogleTruthVersion}"
     const val robolectric = "org.robolectric:robolectric:${TestingVersions.testRobolectricVersion}"
 }
-
 

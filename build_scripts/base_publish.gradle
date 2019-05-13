@@ -1,16 +1,6 @@
 import config.ArtifactInfo
-import config.Builds
 
-apply plugin: 'com.novoda.bintray-release'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath Builds.novodaGradlePlugin
-    }
-}
+apply plugin: "com.novoda.bintray-release"
 
 publish {
     def groupProjectID = ArtifactInfo.groupProjectID

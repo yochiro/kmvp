@@ -16,27 +16,10 @@ buildscript {
     repositories.jcenter()
     repositories.google()
     dependenciesFrom(config.Builds.basePlugins)
-}
 
-subprojects {
-    buildscript {
-        repositories.jcenter()
-        repositories.google()
-        repositoriesFrom(config.Repos.buildRepoUrls)
-    }
-    repositories.jcenter()
-    repositories.google()
-    repositoriesFrom(config.Repos.dependenciesRepoUrls)
+    dependencies.classpath("com.novoda:bintray-release:0.9.1")
 }
 
 repositories {
     jcenter()
-}
-
-val scriptFiles by extra { ScriptFiles(file("build_scripts")) }
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-module-name=${project.path.substring(1).replace(':', '.')}")
-    }
 }
