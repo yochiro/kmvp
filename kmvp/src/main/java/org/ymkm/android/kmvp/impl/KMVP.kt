@@ -33,84 +33,49 @@ import org.ymkm.android.kmvp.UsePresenter
 import java.lang.ref.WeakReference
 import java.lang.reflect.AnnotatedElement
 
-interface PresenterDelegate<T : Presenter<out PresenterView, P>, P : Parcelable> {
+object PresenterInjector {
 
-    /**
-     * For activities, guaranteed to be non null after [android.app.Activity.onCreate] and until after [android.app.Activity.onDestroy].
-     */
-    var presenter: T?
+    fun <T : Presenter<V, P>, V : PresenterView, P : Parcelable> dispatchCreate(
+        presenter: T,
+        presenterView: PresenterView,
+        params: P?,
+        savedInstanceState: Bundle?
+    ) {
+        presenter.setArgs(params)
+        savedInstanceState?.apply {
+            presenter.onRestore(this)
+        }
+        try {
+            @Suppress("UNCHECKED_CAST")
+            presenter.injectPresenterView(presenterView as V)
+        } catch (ignored: ClassCastException) {
+            // ignored
+        }
+    }
 
-    val params: P?
+    fun <T : Presenter<V, P>, V : PresenterView, P : Parcelable> dispatchDestroy(
+        presenter: T,
+        presenterView: PresenterView
+    ) {
+        try {
+            @Suppress("UNCHECKED_CAST")
+            presenter.resetPresenterView(presenterView as V)
+        } catch (ignored: ClassCastException) {
+            // ignored
+        }
+    }
 
-    @Suppress("UNCHECKED_CAST")
-    object Builder {
-
-        fun <T : Presenter<V, P>, V : PresenterView, P : Parcelable> dispatchCreate(presenterDelegate: PresenterDelegate<T, P>, savedInstanceState: Bundle?) {
-            val presenter = presenterDelegate.presenter ?: return
-            val params = presenterDelegate.params
-            presenter.setArgs(params)
-            if (savedInstanceState != null) {
-                presenter.onRestore(savedInstanceState)
-            }
-            if (PresenterView::class.java.isAssignableFrom(presenterDelegate.javaClass)) {
-                try {
-                    Builder.injectPresenterView(presenterDelegate, presenterDelegate as V)
-                } catch (cce: ClassCastException) {
-                    // Not a subclass of V
-                }
-
-            }
+    fun <T : Presenter<out PresenterView, out Parcelable>> newPresenter(clazz: AnnotatedElement): T {
+        val usePresenter = clazz.getAnnotation(UsePresenter::class.java)
+            ?: error("$clazz needs to be annotated with UsePresenter")
+        val presenterClass = usePresenter.value
+        try {
+            @Suppress("UNCHECKED_CAST")
+            return presenterClass::class.java.newInstance() as T
+        } catch (e: Exception) {
+            throw RuntimeException(e)
         }
 
-        fun <T : Presenter<V, P>, V : PresenterView, P : Parcelable> dispatchDestroy(presenterDelegate: PresenterDelegate<T, P>) {
-            if (PresenterView::class.java.isAssignableFrom(presenterDelegate.javaClass)) {
-                try {
-                    Builder.resetPresenterView(presenterDelegate, presenterDelegate as V)
-                } catch (cce: ClassCastException) {
-                    // Not a subclass of V
-                }
-
-            }
-        }
-
-        fun <T : Presenter<V, P>, V : PresenterView, P : Parcelable> injectPresenterView(presenter: T?, presenterView: V?) {
-            if (presenter != null && presenterView != null) {
-                presenter.injectPresenterView(presenterView)
-            }
-        }
-
-        fun <D : PresenterDelegate<T, P>, T : Presenter<V, P>, V : PresenterView, P : Parcelable> injectPresenterView(delegate: D?, presenterView: V) {
-            if (delegate != null) {
-                injectPresenterView(delegate.presenter, presenterView)
-            }
-        }
-
-        fun <T : Presenter<V, out Parcelable>, V : PresenterView> resetPresenterView(presenter: T?, presenterView: V?) {
-            if (presenter != null && presenterView != null) {
-                presenter.resetPresenterView(presenterView)
-            }
-        }
-
-        fun <D : PresenterDelegate<T, P>, T : Presenter<V, P>, V : PresenterView, P : Parcelable> resetPresenterView(delegate: D?, presenterView: V) {
-            if (delegate != null) {
-                resetPresenterView(delegate.presenter, presenterView)
-            }
-        }
-
-        fun <T : Presenter<out PresenterView, out Parcelable>> newPresenter(clazz: AnnotatedElement, savedBundle: Bundle?): T? {
-            val usePresenter = clazz.getAnnotation(UsePresenter::class.java) ?: return null
-            val presenterClass = usePresenter.value
-            try {
-                val p = presenterClass::class.java.newInstance() as T
-                if (savedBundle != null) {
-                    p.onRestore(savedBundle)
-                }
-                return p
-            } catch (e: Exception) {
-                throw RuntimeException(e)
-            }
-
-        }
     }
 }
 

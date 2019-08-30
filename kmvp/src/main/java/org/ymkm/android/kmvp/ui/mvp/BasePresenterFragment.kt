@@ -27,45 +27,32 @@ import android.os.Bundle
 import android.os.Parcelable
 import org.ymkm.android.kmvp.Presenter
 import org.ymkm.android.kmvp.PresenterView
-import org.ymkm.android.kmvp.impl.PresenterDelegate
+import org.ymkm.android.kmvp.impl.PresenterInjector
 import org.ymkm.android.kmvp.ui.BaseAndroidXFragment
 
 @Suppress("MemberVisibilityCanBePrivate")
-abstract class BasePresenterFragment<T : Presenter<V, P>, V : PresenterView, P : Parcelable> : BaseAndroidXFragment(),
-    PresenterDelegate<T, P> {
-
-    override val params: P?
-        get() = handleArguments(arguments)
+abstract class BasePresenterFragment<T : Presenter<V, P>, V : PresenterView, P : Parcelable> : BaseAndroidXFragment(), PresenterView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        createPresenter(savedInstanceState)
         super.onCreate(savedInstanceState)
-        PresenterDelegate.Builder.dispatchCreate(this, savedInstanceState)
+        PresenterInjector.dispatchCreate(presenter, this, handleArguments(arguments), savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter?.onSave(outState)
+        presenter.onSave(outState)
     }
 
     override fun onDestroy() {
-        PresenterDelegate.Builder.dispatchDestroy(this)
+        PresenterInjector.dispatchDestroy(presenter, this)
         super.onDestroy()
     }
 
 
     protected open fun handleArguments(args: Bundle?): P? = null
 
-    /**
-     * Override if default behavior is not appropriate. MUST set the presenter variable.
-     *
-     * Default behavior : this class should be annotated with [org.ymkm.android.kmvp.UsePresenter] with value specifying the Presenter class to use.
-     *
-     * @param savedBundle previously saved bundle
-     */
-    protected open fun createPresenter(savedBundle: Bundle?) {
-        if (presenter == null) {
-            presenter = PresenterDelegate.Builder.newPresenter(javaClass, savedBundle)
-        }
+
+    open val presenter: T by lazy {
+        PresenterInjector.newPresenter<T>(javaClass)
     }
 }

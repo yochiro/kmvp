@@ -27,11 +27,7 @@ package org.ymkm.android.kmvp.ui.mvp.lifecycle.app
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.*
 import java.lang.ref.WeakReference
 
 abstract class LifecycleAwareApplication : Application(), LifecycleOwner, LifecycleObserver,

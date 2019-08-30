@@ -34,11 +34,12 @@ import org.ymkm.android.kmvp.ui.mvp.BasePresenterActivity
 abstract class BasePresenterLifecycleActivity<T : Presenter<V, P>, V : PresenterView, P : Parcelable> :
     BasePresenterActivity<T, V, P>() {
 
-    private data class PresenterSaveInstance<T : Presenter<V, P>, V : PresenterView, P : Parcelable>(val presenter: T?)
+    private data class PresenterSaveInstance<T : Presenter<V, P>, V : PresenterView, P : Parcelable>(
+        val presenter: T?
+    )
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        createPresenter(savedInstanceState)
         if (presenter is LifecycleObserver) {
             lifecycle.addObserver(presenter as LifecycleObserver)
         }
@@ -57,10 +58,8 @@ abstract class BasePresenterLifecycleActivity<T : Presenter<V, P>, V : Presenter
         return PresenterSaveInstance(presenter)
     }
 
-    override fun createPresenter(savedBundle: Bundle?) {
-        presenter = getSavedPresenter()
-        super.createPresenter(savedBundle)
-    }
+    override val presenter: T
+        get() = getSavedPresenter() ?: super.presenter
 
 
     private fun getSavedPresenter(): T? {

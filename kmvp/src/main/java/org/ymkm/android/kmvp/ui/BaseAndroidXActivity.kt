@@ -35,7 +35,7 @@ abstract class BaseAndroidXActivity : AppCompatActivity() {
     override fun onAttachFragment(fragment: Fragment) {
         super.onAttachFragment(fragment)
         if (fragment is OnBackPressedListener) {
-            mOnBackListenableFragments.add(WeakReference(fragment as OnBackPressedListener))
+            mOnBackListenableFragments.add(WeakReference(fragment))
         }
     }
 

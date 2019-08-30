@@ -23,7 +23,6 @@
  */
 package org.ymkm.android.kmvp.ui.mvp.inject
 
-import android.os.Bundle
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import dagger.android.AndroidInjector
@@ -44,16 +43,13 @@ abstract class BaseInjectPresenterFragment<T : Presenter<V, P>, V : PresenterVie
     lateinit var childFragmentInjector: DispatchingAndroidInjector<Fragment>
 
 
-    override var presenter: T?
-        get()= presenterInject
-        set(_) = Unit
+    override val presenter: T
+        get() = presenterInject
+
 
     override fun onAttached() {
         AndroidSupportInjection.inject(this)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment>? = childFragmentInjector
-
-    // No-op, we inject the presenter through Dagger annotation
-    override fun createPresenter(savedBundle: Bundle?) = Unit
 }

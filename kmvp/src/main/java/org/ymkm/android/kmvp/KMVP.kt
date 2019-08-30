@@ -36,14 +36,9 @@ interface PresenterView
 
 interface Presenter<V : PresenterView, P : Parcelable> {
 
-    interface PresenterViewDelegate<V> {
-        fun apply(presenterView: V)
-    }
-
     fun setArgs(params: P?): Boolean
     fun injectPresenterView(presenterView: V)
     fun resetPresenterView(presenterView: V)
     fun onRestore(savedBundle: Bundle)
     fun onSave(outState: Bundle)
 }
-

@@ -23,15 +23,13 @@
  */
 package org.ymkm.android.kmvp.ui.mvp.lifecycle
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 
 
-@Suppress("MemberVisibilityCanBePrivate", "unused")
-abstract class LifecycleDelegate : LifecycleObserver, LifecycleOwner {
+abstract class LifecycleDelegate : LifecycleObserver, LifecycleOwner
+
+@Suppress("unused")
+class LifecycleDelegateImpl : LifecycleDelegate() {
 
     @Suppress("LeakingThis")
     private val mLifecycleRegistry: LifecycleRegistry = LifecycleRegistry(this)
@@ -42,51 +40,31 @@ abstract class LifecycleDelegate : LifecycleObserver, LifecycleOwner {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun create() {
-        onCreate()
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
-        onStart()
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun resume() {
-        onResume()
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun pause() {
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-        onPause()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun stop() {
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
-        onStop()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun destroy() {
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-        onDestroy()
     }
-
-    //
-
-    protected open fun onCreate() = Unit
-
-    protected open fun onStart() = Unit
-
-    protected open fun onResume() = Unit
-
-    protected open fun onPause() = Unit
-
-    protected open fun onStop() = Unit
-
-    protected open fun onDestroy() = Unit
 }

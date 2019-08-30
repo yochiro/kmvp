@@ -28,40 +28,39 @@ import android.os.Bundle
 import android.os.Parcelable
 import org.ymkm.android.kmvp.Presenter
 import org.ymkm.android.kmvp.PresenterView
-import org.ymkm.android.kmvp.impl.PresenterDelegate
+import org.ymkm.android.kmvp.impl.PresenterInjector
 import org.ymkm.android.kmvp.ui.BaseAndroidXActivity
 
 @Suppress("MemberVisibilityCanBePrivate")
-abstract class BasePresenterActivity<T : Presenter<V, P>, V : PresenterView, P : Parcelable> : BaseAndroidXActivity(),
-    PresenterDelegate<T, P> {
-
-    override val params: P?
-        get() = handleIntentArgs(intent)
-
+abstract class BasePresenterActivity<T : Presenter<V, P>, V : PresenterView, P : Parcelable> :
+    BaseAndroidXActivity(), PresenterView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        createPresenter(savedInstanceState)
         super.onCreate(savedInstanceState)
-        PresenterDelegate.Builder.dispatchCreate(this, savedInstanceState)
+        PresenterInjector.dispatchCreate(
+            presenter,
+            this,
+            handleIntentArgs(intent),
+            savedInstanceState
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter?.onSave(outState)
+        presenter.onSave(outState)
     }
 
     override fun onDestroy() {
-        PresenterDelegate.Builder.dispatchDestroy(this)
+        PresenterInjector.dispatchDestroy(presenter, this)
         super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        presenter?.apply {
-            val args = handleIntentArgs(intent)
-            if (args != null) {
+        presenter.apply {
+            handleIntentArgs(intent)?.apply {
                 // Update arguments when a new intent is sent
-                setArgs(args)
+                setArgs(this)
             }
         }
     }
@@ -70,16 +69,7 @@ abstract class BasePresenterActivity<T : Presenter<V, P>, V : PresenterView, P :
     protected open fun handleIntentArgs(intent: Intent): P? = null
 
 
-    /**
-     * Override if default behavior is not appropriate. MUST set the presenter variable.
-     *
-     * Default behavior : this class should be annotated with [org.ymkm.android.kmvp.UsePresenter] with value specifying the Presenter class to use.
-     *
-     * @param savedBundle previously saved bundle
-     */
-    protected open fun createPresenter(savedBundle: Bundle?) {
-        if (presenter == null) {
-            presenter = PresenterDelegate.Builder.newPresenter(javaClass, savedBundle)
-        }
+    open val presenter: T by lazy {
+        PresenterInjector.newPresenter<T>(javaClass)
     }
 }

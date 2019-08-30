@@ -23,7 +23,6 @@
  */
 package org.ymkm.android.kmvp.ui.mvp.lifecycle
 
-import android.os.Bundle
 import android.os.Parcelable
 import androidx.lifecycle.LifecycleObserver
 import org.ymkm.android.kmvp.Presenter
@@ -33,13 +32,11 @@ import org.ymkm.android.kmvp.ui.mvp.BasePresenterFragment
 abstract class BasePresenterLifecycleFragment<T : Presenter<V, P>, V : PresenterView, P : Parcelable> :
     BasePresenterFragment<T, V, P>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        createPresenter(savedInstanceState)
-        // Add before the create event is dispatched
+    override fun onAttached() {
+        super.onAttached()
         if (presenter is LifecycleObserver) {
             lifecycle.addObserver(presenter as LifecycleObserver)
         }
-        super.onCreate(savedInstanceState)
     }
 
     override fun onDestroy() {

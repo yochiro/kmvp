@@ -24,50 +24,34 @@
 
 package org.ymkm.android.kmvp.ui.mvp
 
-import android.os.Bundle
 import android.os.Parcelable
-import android.util.SparseArray
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.*
 import org.ymkm.android.kmvp.Presenter
 import org.ymkm.android.kmvp.PresenterView
 import org.ymkm.android.kmvp.ui.mvp.lifecycle.LifecycleDelegate
-import java.lang.ref.WeakReference
+import org.ymkm.android.kmvp.ui.mvp.lifecycle.LifecycleDelegateImpl
 
-abstract class LifecycleAwareBasePresenter<PV : PresenterView, P : Parcelable> :
-    LifecycleDelegate(), Presenter<PV, P>, ViewModelStoreOwner {
-
-    override fun setArgs(params: P?): Boolean = false
-
-    override fun injectPresenterView(presenterView: PV) {
-        presenterViews.put(presenterView.hashCode(), WeakReference(presenterView))
-    }
-
-    override fun resetPresenterView(presenterView: PV) {
-        presenterViews.remove(presenterView.hashCode())
-    }
-
-    override fun onRestore(savedBundle: Bundle) = Unit
-
-    override fun onSave(outState: Bundle) = Unit
+abstract class LifecycleAwarePresenter<PV : PresenterView, P : Parcelable>(
+    private val presenter: Presenter<PV, P>,
+    lifecycleDelegate: LifecycleDelegate = LifecycleDelegateImpl()
+) :
+    Presenter<PV, P> by presenter,
+    LifecycleOwner by lifecycleDelegate,
+    LifecycleObserver by lifecycleDelegate,
+    ViewModelStoreOwner {
 
     override fun getViewModelStore(): ViewModelStore {
         check(lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
             "Presenter isn't ready yet. You can't request ViewModel before onCreate call."
         }
-        return mViewModelStore ?: ViewModelStore()
-    }
-
-
-    protected fun sendView(viewBlock: PV.() -> Unit) {
-        for (i in 0 until presenterViews.size()) {
-            val wpv = presenterViews.get(presenterViews.keyAt(i))
-            wpv.get()?.viewBlock()
+        return if (presenter is ViewModelStoreOwner) {
+            presenter.viewModelStore
+        } else {
+            mViewModelStore
         }
     }
 
-
-    private val presenterViews = SparseArray<WeakReference<PV>>()
-    private var mViewModelStore: ViewModelStore? = null
+    private val mViewModelStore by lazy {
+        ViewModelStore()
+    }
 }

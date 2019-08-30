@@ -45,9 +45,8 @@ abstract class BaseInjectPresenterLifecycleActivity<T : Presenter<V, P>, V : Pre
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
 
-    override var presenter: T?
-        get()= presenterInject
-        set(_) = Unit
+    override val presenter: T
+        get() = presenterInject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -55,7 +54,4 @@ abstract class BaseInjectPresenterLifecycleActivity<T : Presenter<V, P>, V : Pre
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment>? = fragmentInjector
-
-    // No-op, we inject the presenter through Dagger annotation
-    override fun createPresenter(savedBundle: Bundle?) = Unit
 }
